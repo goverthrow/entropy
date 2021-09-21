@@ -65,9 +65,10 @@ checkGetrandom cc lbi = do
                                 , "    return getrandom(&tmp, sizeof(tmp), GRND_NONBLOCK) != -1;"
                                 , "}"
                                 ])
-        if libcGetrandom then return $ addOptions cArgsLibc cArgsLibc lbi
+        if libcGetrandom
+        then return $ addOptions cArgsLibc cArgsLibc lbi
         else do
-        syscallGetrandom <- compileCheck cc "testSyscallGetrandom" "Result of syscall getrandom() Test: "
+          syscallGetrandom <- compileCheck cc "testSyscallGetrandom" "Result of syscall getrandom() Test: "
                 (unlines        [ "#define _GNU_SOURCE"
                                 , "#include <errno.h>"
                                 , "#include <unistd.h>"
@@ -86,7 +87,7 @@ checkGetrandom cc lbi = do
                                 , "    return getrandom(&tmp, sizeof(tmp), GRND_NONBLOCK) != -1;"
                                 , "}"
                                 ])
-        return $ if syscallGetrandom then addOptions cArgs cArgs lbi else lbi
+          return $ if syscallGetrandom then addOptions cArgs cArgs lbi else lbi
   where cArgs = ["-DHAVE_GETRANDOM"]
         cArgsLibc = cArgs ++ ["-DHAVE_LIBC_GETRANDOM"]
 
